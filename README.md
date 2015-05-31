@@ -1,29 +1,6 @@
-# Tunes for TV #
+# Dream Scene #
 
-<img src="/promo/screenshots/1.png" width="500" height="300">
-
-Tunes is a music app for Android TV that is powered by Spotify. Currently, it supports logging in through Spotify's OAuth system, loading all of your playlists and playing them.
-
-Current Issues:
-
-1. Now playing card does not display album artwork
-2. Music will sometimes stop playing after a song finishes, many times requiring a restart of the app
-
-Possible future improvements:
-
-1. Search for songs
-2. Radio options
-3. Explore music
-4. Spotify Connect support
-
-(NOTE: I have not looked into Spotify's APIs enough to even know if 2-4 are possible. I do know that there is no official API for Spotify Connect)
-
-Feel free to make improvements and send me a pull request, I'll try and merge them as soon as I have time.
-
-### Screenshots ##
-
-<img src="/promo/screenshots/2.png" width="500" height="300">
-<img src="/promo/screenshots/3.png" width="500" height="300">
+Dream scene is a simple Android TV app that acts very similar to the default screensaver that displays nature images. The main difference being that this app uses 4k images targeted at Nvidia Shield on 4k displays.
 
 ---
 
