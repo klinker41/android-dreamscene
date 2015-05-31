@@ -21,6 +21,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.widget.ImageView;
 
+import com.klinker.android.dream.util.NetworkUtils;
+
 import java.io.File;
 
 public class NetworkImageLoader extends AbstractImageLoader {
@@ -63,7 +65,7 @@ public class NetworkImageLoader extends AbstractImageLoader {
                         }
                     } else {
                         try {
-                            Bitmap image = networkUtils.loadBitmap(location);
+                            Bitmap image = NetworkUtils.loadBitmap(location);
                             if (image != null) {
                                 ioUtils.cacheBitmap(image, f);
                                 setImage(image);

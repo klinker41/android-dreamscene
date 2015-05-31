@@ -28,7 +28,6 @@ import android.widget.ImageView;
 
 import com.klinker.android.dream.util.CacheHelper;
 import com.klinker.android.dream.util.IoUtils;
-import com.klinker.android.dream.util.NetworkUtils;
 
 abstract class AbstractImageLoader implements Runnable {
 
@@ -38,7 +37,6 @@ abstract class AbstractImageLoader implements Runnable {
     private Handler handler;
     private Context context;
     private ImageView imageView;
-    public NetworkUtils networkUtils;
     public CacheHelper cacheHelper;
     public IoUtils ioUtils;
 
@@ -52,7 +50,6 @@ abstract class AbstractImageLoader implements Runnable {
         } catch (Throwable e) {
         }
         this.handler = new Handler();
-        this.networkUtils = new NetworkUtils();
         this.cacheHelper = new CacheHelper();
         this.ioUtils = new IoUtils();
 
@@ -83,12 +80,6 @@ abstract class AbstractImageLoader implements Runnable {
 
                             @Override
                             public void onAnimationEnd(Animator animation) {
-                                Drawable drawable = imageView.getDrawable();
-
-                                if (drawable instanceof BitmapDrawable) {
-                                    ((BitmapDrawable) drawable).getBitmap().recycle();
-                                }
-
                                 imageView.setImageBitmap(image);
                                 imageView.setAlpha(0.0f);
                                 imageView.animate()

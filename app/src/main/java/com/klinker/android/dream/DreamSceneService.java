@@ -18,17 +18,22 @@ package com.klinker.android.dream;
 
 import android.os.Handler;
 import android.service.dreams.DreamService;
+import android.util.Log;
 import android.widget.ImageView;
 
 import com.klinker.android.dream.loader.NetworkImageLoader;
+import com.klinker.android.dream.util.NetworkUtils;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.util.Random;
 
 public class DreamSceneService extends DreamService {
 
     private static final String TAG = "DreamSceneService";
+    private static final String JSON_URL =
+            "https://raw.githubusercontent.com/klinker41/android-dreamscene/master/backgrounds.json";
 
     private static final int MAX_SWITCH_TIME = 40000;       // 40 seconds
     private static final int MIN_SWITCH_TIME = 20000;       // 20 seconds
@@ -54,11 +59,36 @@ public class DreamSceneService extends DreamService {
 
         // set the initial background
         handler = new Handler();
-        switchBackground();
+        initBackgrounds();
+    }
+
+    private void initBackgrounds() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    String elements = NetworkUtils.getJsonString(JSON_URL);
+                    backgrounds = new JSONArray(elements);
+
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            switchBackground();
+                        }
+                    });
+                } catch (JSONException e) {
+                    Log.wtf(TAG, "something wrong with backgrounds json :(", e);
+                }
+            }
+        }).start();
     }
 
     private void switchBackground() {
-        new NetworkImageLoader(this, getRandomBackgroundUrl(), background).run();
+        try {
+            new NetworkImageLoader(this, getRandomBackgroundUrl(), background).run();
+        } catch (JSONException e) {
+            Log.e(TAG, "Error switching backgrounds", e);
+        }
 
         handler.postDelayed(new Runnable() {
             @Override
@@ -68,16 +98,17 @@ public class DreamSceneService extends DreamService {
         }, getRandomSwitchTime());
     }
 
-    private String getRandomBackgroundUrl() {
+    private String getRandomBackgroundUrl() throws JSONException {
         Random r = new Random();
-        int num = r.nextInt(BACKGROUNDS.length);
-        return BACKGROUNDS[num];
+        int num = r.nextInt(backgrounds.length());
+        String background = backgrounds.getString(num);
+        Log.v(TAG, "displaying new background: " + background);
+        return background;
     }
 
     private int getRandomSwitchTime() {
         Random r = new Random();
         return r.nextInt(MAX_SWITCH_TIME - MIN_SWITCH_TIME) + MIN_SWITCH_TIME;
-
     }
 
 }

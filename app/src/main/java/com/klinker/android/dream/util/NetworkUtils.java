@@ -40,7 +40,7 @@ public class NetworkUtils {
 
     private static final String TAG = "NetworkUtils";
 
-    public Bitmap loadBitmap(String location) throws Throwable {
+    public static Bitmap loadBitmap(String location) throws Throwable {
         if (location.equals("")) {
             return null;
         } else if (!(location.startsWith("http:") || location.startsWith("https:") || location.startsWith("www."))) {
@@ -53,18 +53,19 @@ public class NetworkUtils {
         return image;
     }
 
-    public static String getJsonString(String url){
+    public static String getJsonString(String url) {
         InputStream inputStream = null;
         String result = "";
+
         try {
             HttpClient httpclient = new DefaultHttpClient();
             HttpResponse httpResponse = httpclient.execute(new HttpGet(url));
             inputStream = httpResponse.getEntity().getContent();
-            if(inputStream != null)
+            if (inputStream != null) {
                 result = convertInputStreamToString(inputStream);
-            else
+            } else {
                 result = "Did not work!";
-
+            }
         } catch (Exception e) {
             Log.d("InputStream", e.getLocalizedMessage());
         }
