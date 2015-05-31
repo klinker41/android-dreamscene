@@ -29,13 +29,28 @@ import org.json.JSONException;
 
 import java.util.Random;
 
+/**
+ * Dream Service with pulls wallpaper urls from a JSON and displays them randomly on screen
+ */
 public class DreamSceneService extends DreamService {
 
     private static final String TAG = "DreamSceneService";
+
+    /**
+     * URL for finding all wallpapers. By doing this instead of hardcoding a value, new wallpapers
+     * does not require a new install of the app
+     */
     private static final String JSON_URL =
             "https://raw.githubusercontent.com/klinker41/android-dreamscene/master/backgrounds.json";
 
+    /**
+     * Max time in milliseconds that a switch could occur
+     */
     private static final int MAX_SWITCH_TIME = 40000;       // 40 seconds
+
+    /**
+     * Min time in milliseconds that a switch could occur
+     */
     private static final int MIN_SWITCH_TIME = 20000;       // 20 seconds
 
     private JSONArray backgrounds;
@@ -62,6 +77,9 @@ public class DreamSceneService extends DreamService {
         initBackgrounds();
     }
 
+    /**
+     * Start a thread that fetches a JSONArray of all wallpapers, then set the first one
+     */
     private void initBackgrounds() {
         new Thread(new Runnable() {
             @Override
@@ -85,6 +103,10 @@ public class DreamSceneService extends DreamService {
         }).start();
     }
 
+    /**
+     * Find a random background from the list, load it, and set it. Then, delay a certain amount
+     * of time and do it again
+     */
     private void switchBackground() {
         try {
             new NetworkImageLoader(this, getRandomBackgroundUrl(), background).run();
@@ -92,6 +114,7 @@ public class DreamSceneService extends DreamService {
             Log.e(TAG, "Error switching backgrounds", e);
         }
 
+        // creates a continuous loop that goes forever, until the daydream is killed
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -100,7 +123,15 @@ public class DreamSceneService extends DreamService {
         }, getRandomSwitchTime());
     }
 
+    /**
+     * Choose a random background URL from the list
+     * @return a URL for a background
+     * @throws JSONException when the url is out of bounds on the JSON, shouldn't happen.
+     */
     private String getRandomBackgroundUrl() throws JSONException {
+        // TODO keep a reference to the last wallpaper in memory so that we don't set it twice
+        // in a row
+
         Random r = new Random();
         int num = r.nextInt(backgrounds.length());
         String background = backgrounds.getString(num);
@@ -108,6 +139,10 @@ public class DreamSceneService extends DreamService {
         return background;
     }
 
+    /**
+     * Choose a random time to switch, somewhere in the range [MIN_SWITCH_TIME, MAX_SWITCH_TIME)
+     * @return a random time in milliseconds
+     */
     private int getRandomSwitchTime() {
         Random r = new Random();
         return r.nextInt(MAX_SWITCH_TIME - MIN_SWITCH_TIME) + MIN_SWITCH_TIME;

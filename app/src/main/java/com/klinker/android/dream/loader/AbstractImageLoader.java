@@ -24,30 +24,46 @@ import android.os.Looper;
 import android.widget.ImageView;
 
 import com.klinker.android.dream.util.CacheHelper;
-import com.klinker.android.dream.util.IoUtils;
 
+/**
+ * Image Loader that sets things up and animates imageviews in and out when changing
+ */
 abstract class AbstractImageLoader implements Runnable {
 
     private static final String TAG = "AbstractImageLoader";
+
+    /**
+     * Animation time for the fade in and out animations
+     */
     private static final int ANIMATION_DURATION = 500;
 
     private Handler handler;
     private Context context;
     private ImageView imageView;
     public CacheHelper cacheHelper;
-    public IoUtils ioUtils;
 
+    /**
+     * Creates a new loader for loading images into an imageview
+     * @param context the current application context
+     * @param imageView the imageview to put the image into
+     */
     public AbstractImageLoader(Context context, ImageView imageView) {
         this.context = context;
         this.imageView = imageView;
 
-        try { Looper.prepare(); } catch (Throwable e) { }
+        try {
+            Looper.prepare();
+        } catch (Throwable e) {
+        }
 
         this.handler = new Handler();
         this.cacheHelper = new CacheHelper();
-        this.ioUtils = new IoUtils();
     }
 
+    /**
+     * Add a bitmap into the imageview and animate it in with a fade in and fade out animation
+     * @param image the image to show on the imageview
+     */
     public void animateImageView(final Bitmap image) {
         handler.post(new Runnable() {
             @Override
@@ -85,10 +101,18 @@ abstract class AbstractImageLoader implements Runnable {
         });
     }
 
+    /**
+     * Get the current application context
+     * @return the current application context
+     */
     public Context getContext() {
         return context;
     }
 
+    /**
+     * Get the imageview
+     * @return the imageview
+     */
     public ImageView getImageView() {
         return imageView;
     }

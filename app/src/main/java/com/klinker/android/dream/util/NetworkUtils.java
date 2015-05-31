@@ -31,10 +31,19 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 
+/**
+ * Helper class for managing network interactions
+ */
 public class NetworkUtils {
 
     private static final String TAG = "NetworkUtils";
 
+    /**
+     * Load a bitmap from the given location url
+     * @param location the url of the bitmap
+     * @return the bitmap from the url
+     * @throws Throwable
+     */
     public static Bitmap loadBitmap(String location) throws Throwable {
         if (location.equals("")) {
             return null;
@@ -45,6 +54,7 @@ public class NetworkUtils {
         location = location.replace(" ", "%20");
         URL url = new URL(location);
 
+        // use a recycled bitmap
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inPreferQualityOverSpeed = true;
         options.inBitmap = BitmapHelper.getCurrentBitmap();
@@ -52,6 +62,11 @@ public class NetworkUtils {
         return BitmapFactory.decodeStream(url.openConnection().getInputStream(), null, options);
     }
 
+    /**
+     * Get a JSON string from the given url
+     * @param url the url where the JSON is located
+     * @return the String in the format of a JSON
+     */
     public static String getJsonString(String url) {
         InputStream inputStream;
         String result = "";
@@ -73,10 +88,10 @@ public class NetworkUtils {
     }
 
     private static String convertInputStreamToString(InputStream inputStream) throws IOException {
-        BufferedReader bufferedReader = new BufferedReader( new InputStreamReader(inputStream));
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
         String line;
         String result = "";
-        while((line = bufferedReader.readLine()) != null)
+        while ((line = bufferedReader.readLine()) != null)
             result += line;
 
         inputStream.close();

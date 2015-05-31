@@ -20,6 +20,14 @@ import android.graphics.Bitmap;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * A helper class for allocating memory for large bitmaps. We create 2 very large (4k resolution)
+ * bitmaps and store them in memory. Then we keep a reference to one of them, load the new image
+ * into that allocated memory and switch the reference to the other one and so on.
+ *
+ * We require 2 bitmaps so that we can fade out of one and into the next. Without an animation,
+ * one would suffice and take less space.
+ */
 public class BitmapHelper {
 
     private static final Bitmap inBitmap1;
@@ -30,12 +38,19 @@ public class BitmapHelper {
 
     private static AtomicInteger currentBitmap = new AtomicInteger(1);
 
+    /**
+     * Create 2 bitmaps in memory with a resolution of 3840x2160 (4k Ultra HD)
+     */
     static {
         inBitmap1 = Bitmap.createBitmap(BITMAP_WIDTH, BITMAP_HEIGHT, Bitmap.Config.ARGB_8888);
         inBitmap2 = Bitmap.createBitmap(BITMAP_WIDTH, BITMAP_HEIGHT, Bitmap.Config.ARGB_8888);
     }
 
-    public static final Bitmap getCurrentBitmap() {
+    /**
+     * Get a reference to the current bitmap that we want to overwrite with a new image
+     * @return the bitmap reference
+     */
+    public static Bitmap getCurrentBitmap() {
         if (currentBitmap.get() == 1) {
             currentBitmap.set(2);
             return inBitmap1;

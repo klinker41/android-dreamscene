@@ -26,12 +26,22 @@ import com.klinker.android.dream.util.NetworkUtils;
 
 import java.io.File;
 
+/**
+ * Task helper for loading images into an ImageView from a given url. Handles caching the image
+ * so we don't need to continuously download them.
+ */
 public class NetworkImageLoader extends AbstractImageLoader {
 
     private static final String TAG = "NetworkImageLoader";
 
     private String location;
 
+    /**
+     * Load an image from the location into the imageView
+     * @param context the current application context
+     * @param location the url of the image
+     * @param imageView the imageview to display the image in
+     */
     public NetworkImageLoader(Context context, String location, ImageView imageView) {
         super(context, imageView);
         this.location = location;
@@ -46,10 +56,12 @@ public class NetworkImageLoader extends AbstractImageLoader {
         new Thread(new Runnable() {
             @Override
             public void run() {
+                // check if the file is already cached so we don't download again
                 File f = cacheHelper.getCacheFileForImage(getContext(), location);
 
                 if (f != null && f.exists()) {
                     try {
+                        // set up options to reuse a bitmap and not waste too much memory
                         BitmapFactory.Options options = new BitmapFactory.Options();
                         options.inPreferQualityOverSpeed = true;
                         options.inBitmap = BitmapHelper.getCurrentBitmap();
@@ -62,9 +74,10 @@ public class NetworkImageLoader extends AbstractImageLoader {
                     }
                 } else {
                     try {
+                        // load the bitmap from a network and cache it
                         Bitmap image = NetworkUtils.loadBitmap(location);
                         if (image != null) {
-                            ioUtils.cacheBitmap(image, f);
+                            cacheHelper.cacheBitmap(image, f);
                             setImage(image);
                         }
                     } catch (Throwable e) {
@@ -76,6 +89,9 @@ public class NetworkImageLoader extends AbstractImageLoader {
         }).start();
     }
 
+    /**
+     * set the bitmap to the imageview with an animation
+     */
     private void setImage(final Bitmap bitmap) {
         if (bitmap != null && !bitmap.isRecycled() && getImageView() != null) {
             animateImageView(bitmap);
