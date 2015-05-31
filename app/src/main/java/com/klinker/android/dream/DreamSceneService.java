@@ -70,6 +70,8 @@ public class DreamSceneService extends DreamService {
                     String elements = NetworkUtils.getJsonString(JSON_URL);
                     backgrounds = new JSONArray(elements);
 
+                    Log.v(TAG, "found JSONArray: " + elements);
+
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
