@@ -16,16 +16,9 @@
 
 package com.klinker.android.dream.util;
 
-import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
-
-import com.klinker.android.dream.loader.NetworkImageLoader;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;

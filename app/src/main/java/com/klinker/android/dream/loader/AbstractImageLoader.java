@@ -19,11 +19,8 @@ package com.klinker.android.dream.loader;
 import android.animation.Animator;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.LruCache;
 import android.widget.ImageView;
 
 import com.klinker.android.dream.util.CacheHelper;
@@ -40,32 +37,18 @@ abstract class AbstractImageLoader implements Runnable {
     public CacheHelper cacheHelper;
     public IoUtils ioUtils;
 
-    private static LruCache<String, Bitmap> mIconCache;
-
     public AbstractImageLoader(Context context, ImageView imageView) {
         this.context = context;
         this.imageView = imageView;
-        try {
-            Looper.prepare();
-        } catch (Throwable e) {
-        }
+
+        try { Looper.prepare(); } catch (Throwable e) { }
+
         this.handler = new Handler();
         this.cacheHelper = new CacheHelper();
         this.ioUtils = new IoUtils();
-
-        if (mIconCache == null) {
-            final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
-            mIconCache = new LruCache<String, Bitmap>(maxMemory) {
-                @Override
-                protected int sizeOf(String key, Bitmap bitmap) {
-                    return bitmap.getByteCount() / 1024;
-                }
-            };
-        }
     }
 
-    public void animateImageView(String location, final Bitmap image) {
-        addBitmapToMemoryCache(location, image);
+    public void animateImageView(final Bitmap image) {
         handler.post(new Runnable() {
             @Override
             public void run() {
@@ -108,24 +91,6 @@ abstract class AbstractImageLoader implements Runnable {
 
     public ImageView getImageView() {
         return imageView;
-    }
-
-    public Bitmap getBitmapFromMemCache(String key) {
-        if (key == null) {
-            return null;
-        } else {
-            return mIconCache.get(key);
-        }
-    }
-
-    public void addBitmapToMemoryCache(String key, Bitmap bitmap) {
-        if (mIconCache != null && key != null && bitmap != null) {
-            mIconCache.put(key, bitmap);
-        }
-    }
-
-    public Handler getHandler() {
-        return handler;
     }
 
 }

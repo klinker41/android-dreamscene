@@ -25,7 +25,6 @@ import com.klinker.android.dream.util.BitmapHelper;
 import com.klinker.android.dream.util.NetworkUtils;
 
 import java.io.File;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class NetworkImageLoader extends AbstractImageLoader {
 
@@ -44,51 +43,42 @@ public class NetworkImageLoader extends AbstractImageLoader {
             return;
         }
 
-        final Bitmap bitmap = getBitmapFromMemCache(location);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                File f = cacheHelper.getCacheFileForImage(getContext(), location);
 
-        if (bitmap != null) {
-            ImageView image = getImageView();
-            if (image != null) {
-                image.setImageBitmap(bitmap);
-            }
-        } else {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    File f = cacheHelper.getCacheFileForImage(getContext(), location);
+                if (f != null && f.exists()) {
+                    try {
+                        BitmapFactory.Options options = new BitmapFactory.Options();
+                        options.inPreferQualityOverSpeed = true;
+                        options.inBitmap = BitmapHelper.getCurrentBitmap();
 
-                    if (f != null && f.exists()) {
-                        try {
-                            BitmapFactory.Options options = new BitmapFactory.Options();
-                            options.inPreferQualityOverSpeed = true;
-                            options.inBitmap = BitmapHelper.getCurrentBitmap();
-
-                            Bitmap image = BitmapFactory.decodeFile(f.getPath(), options);
+                        Bitmap image = BitmapFactory.decodeFile(f.getPath(), options);
+                        setImage(image);
+                    } catch (OutOfMemoryError e) {
+                        e.printStackTrace();
+                        setImage(null);
+                    }
+                } else {
+                    try {
+                        Bitmap image = NetworkUtils.loadBitmap(location);
+                        if (image != null) {
+                            ioUtils.cacheBitmap(image, f);
                             setImage(image);
-                        } catch (OutOfMemoryError e) {
-                            e.printStackTrace();
-                            setImage(null);
                         }
-                    } else {
-                        try {
-                            Bitmap image = NetworkUtils.loadBitmap(location);
-                            if (image != null) {
-                                ioUtils.cacheBitmap(image, f);
-                                setImage(image);
-                            }
-                        } catch (Throwable e) {
-                            e.printStackTrace();
-                            setImage(null);
-                        }
+                    } catch (Throwable e) {
+                        e.printStackTrace();
+                        setImage(null);
                     }
                 }
-            }).start();
-        }
+            }
+        }).start();
     }
 
     private void setImage(final Bitmap bitmap) {
         if (bitmap != null && !bitmap.isRecycled() && getImageView() != null) {
-            animateImageView(location, bitmap);
+            animateImageView(bitmap);
         }
     }
 }
