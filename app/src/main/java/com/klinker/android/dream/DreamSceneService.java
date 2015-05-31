@@ -16,6 +16,7 @@
 
 package com.klinker.android.dream;
 
+import android.os.Handler;
 import android.service.dreams.DreamService;
 import android.widget.ImageView;
 
@@ -51,6 +52,10 @@ public class DreamSceneService extends DreamService {
             "https://raw.githubusercontent.com/klinker41/android-dreamscene/master/backgrounds/569143.jpg"
     };
 
+    private static final int MAX_SWITCH_TIME = 40000;       // 40 seconds
+    private static final int MIN_SWITCH_TIME = 20000;       // 20 seconds
+
+    private Handler handler;
     private ImageView background;
 
     @Override
@@ -68,13 +73,32 @@ public class DreamSceneService extends DreamService {
         // set up the background image
         background = (ImageView) findViewById(R.id.imageView);
 
+        // set the initial background
+        handler = new Handler();
+        switchBackground();
+    }
+
+    private void switchBackground() {
         new NetworkImageLoader(this, getRandomBackgroundUrl(), background).run();
+
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                switchBackground();
+            }
+        }, getRandomSwitchTime());
     }
 
     private String getRandomBackgroundUrl() {
         Random r = new Random();
         int num = r.nextInt(BACKGROUNDS.length);
         return BACKGROUNDS[num];
+    }
+
+    private int getRandomSwitchTime() {
+        Random r = new Random();
+        return r.nextInt(MAX_SWITCH_TIME - MIN_SWITCH_TIME) + MIN_SWITCH_TIME;
+
     }
 
 }

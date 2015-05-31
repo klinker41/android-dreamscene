@@ -88,7 +88,7 @@ abstract class AbstractImageLoader implements Runnable {
                                 if (drawable instanceof BitmapDrawable) {
                                     ((BitmapDrawable) drawable).getBitmap().recycle();
                                 }
-                                
+
                                 imageView.setImageBitmap(image);
                                 imageView.setAlpha(0.0f);
                                 imageView.animate()
