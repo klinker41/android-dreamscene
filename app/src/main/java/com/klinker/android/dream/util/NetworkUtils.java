@@ -25,6 +25,8 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.klinker.android.dream.loader.NetworkImageLoader;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
@@ -49,12 +51,16 @@ public class NetworkUtils {
 
         location = location.replace(" ", "%20");
         URL url = new URL(location);
-        Bitmap image = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-        return image;
+
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inPreferQualityOverSpeed = true;
+        options.inBitmap = BitmapHelper.getCurrentBitmap();
+
+        return BitmapFactory.decodeStream(url.openConnection().getInputStream(), null, options);
     }
 
     public static String getJsonString(String url) {
-        InputStream inputStream = null;
+        InputStream inputStream;
         String result = "";
 
         try {
@@ -75,7 +81,7 @@ public class NetworkUtils {
 
     private static String convertInputStreamToString(InputStream inputStream) throws IOException {
         BufferedReader bufferedReader = new BufferedReader( new InputStreamReader(inputStream));
-        String line = "";
+        String line;
         String result = "";
         while((line = bufferedReader.readLine()) != null)
             result += line;

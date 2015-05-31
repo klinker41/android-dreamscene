@@ -21,9 +21,11 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.widget.ImageView;
 
+import com.klinker.android.dream.util.BitmapHelper;
 import com.klinker.android.dream.util.NetworkUtils;
 
 import java.io.File;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class NetworkImageLoader extends AbstractImageLoader {
 
@@ -57,7 +59,11 @@ public class NetworkImageLoader extends AbstractImageLoader {
 
                     if (f != null && f.exists()) {
                         try {
-                            Bitmap image = BitmapFactory.decodeFile(f.getPath());
+                            BitmapFactory.Options options = new BitmapFactory.Options();
+                            options.inPreferQualityOverSpeed = true;
+                            options.inBitmap = BitmapHelper.getCurrentBitmap();
+
+                            Bitmap image = BitmapFactory.decodeFile(f.getPath(), options);
                             setImage(image);
                         } catch (OutOfMemoryError e) {
                             e.printStackTrace();
