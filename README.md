@@ -1,5 +1,7 @@
 # Dream Scene #
 
+<img src="/screenshot.png" width="500" height="300">
+
 Dream scene is a simple Android TV app that acts very similar to the default screensaver that displays nature images. The main difference being that this app uses 4k images targeted at Nvidia Shield on 4k displays.
 
 ---
