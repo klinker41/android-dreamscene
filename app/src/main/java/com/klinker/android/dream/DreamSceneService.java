@@ -17,12 +17,9 @@
 package com.klinker.android.dream;
 
 import android.service.dreams.DreamService;
-import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.ImageSwitcher;
 import android.widget.ImageView;
-import android.widget.ViewSwitcher;
+
+import com.klinker.android.dream.loader.NetworkImageLoader;
 
 import java.util.Random;
 
@@ -54,7 +51,7 @@ public class DreamSceneService extends DreamService {
             "https://raw.githubusercontent.com/klinker41/android-dreamscene/master/backgrounds/569143.jpg"
     };
 
-    private ImageSwitcher background;
+    private ImageView background;
 
     @Override
     public void onAttachedToWindow() {
@@ -68,25 +65,16 @@ public class DreamSceneService extends DreamService {
         // show the view on the screen
         setContentView(R.layout.daydream_service);
 
-        // set up the background factory
-        background = (ImageSwitcher) findViewById(R.id.imageSwitcher);
-        background.setFactory(new ViewSwitcher.ViewFactory() {
-            @Override
-            public View makeView() {
-                return new ImageView(getApplicationContext());
-            }
-        });
+        // set up the background image
+        background = (ImageView) findViewById(R.id.imageView);
 
-        Animation in = AnimationUtils.loadAnimation(this, android.R.anim.fade_in);
-        Animation out = AnimationUtils.loadAnimation(this, android.R.anim.fade_out);
-        background.setInAnimation(in);
-        background.setOutAnimation(out);
+        new NetworkImageLoader(this, getRandomBackgroundUrl(), background).run();
     }
 
-    private int getRandomBackgroundResource() {
+    private String getRandomBackgroundUrl() {
         Random r = new Random();
         int num = r.nextInt(BACKGROUNDS.length);
-        return getResources().getIdentifier("back" + num, "drawable", getPackageName());
+        return BACKGROUNDS[num];
     }
 
 }
