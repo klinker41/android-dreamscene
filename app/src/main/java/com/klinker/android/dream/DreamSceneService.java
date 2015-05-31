@@ -22,39 +22,18 @@ import android.widget.ImageView;
 
 import com.klinker.android.dream.loader.NetworkImageLoader;
 
+import org.json.JSONArray;
+
 import java.util.Random;
 
 public class DreamSceneService extends DreamService {
 
     private static final String TAG = "DreamSceneService";
 
-    private static final String[] BACKGROUNDS = new String[] {
-            "https://raw.githubusercontent.com/klinker41/android-dreamscene/master/backgrounds/390823.jpg",
-            "https://raw.githubusercontent.com/klinker41/android-dreamscene/master/backgrounds/456548.jpg",
-            "https://raw.githubusercontent.com/klinker41/android-dreamscene/master/backgrounds/456965.jpg",
-            "https://raw.githubusercontent.com/klinker41/android-dreamscene/master/backgrounds/458532.jpg",
-            "https://raw.githubusercontent.com/klinker41/android-dreamscene/master/backgrounds/463395.jpg",
-            "https://raw.githubusercontent.com/klinker41/android-dreamscene/master/backgrounds/468561.jpg",
-            "https://raw.githubusercontent.com/klinker41/android-dreamscene/master/backgrounds/468569.jpg",
-            "https://raw.githubusercontent.com/klinker41/android-dreamscene/master/backgrounds/475841.jpg",
-            "https://raw.githubusercontent.com/klinker41/android-dreamscene/master/backgrounds/475843.jpg",
-            "https://raw.githubusercontent.com/klinker41/android-dreamscene/master/backgrounds/476288.jpg",
-            "https://raw.githubusercontent.com/klinker41/android-dreamscene/master/backgrounds/478066.jpg",
-            "https://raw.githubusercontent.com/klinker41/android-dreamscene/master/backgrounds/479128.jpg",
-            "https://raw.githubusercontent.com/klinker41/android-dreamscene/master/backgrounds/480730.jpg",
-            "https://raw.githubusercontent.com/klinker41/android-dreamscene/master/backgrounds/484717.jpg",
-            "https://raw.githubusercontent.com/klinker41/android-dreamscene/master/backgrounds/491050.jpg",
-            "https://raw.githubusercontent.com/klinker41/android-dreamscene/master/backgrounds/546077.jpg",
-            "https://raw.githubusercontent.com/klinker41/android-dreamscene/master/backgrounds/550965.jpg",
-            "https://raw.githubusercontent.com/klinker41/android-dreamscene/master/backgrounds/558952.jpg",
-            "https://raw.githubusercontent.com/klinker41/android-dreamscene/master/backgrounds/562771.jpg",
-            "https://raw.githubusercontent.com/klinker41/android-dreamscene/master/backgrounds/568653.jpg",
-            "https://raw.githubusercontent.com/klinker41/android-dreamscene/master/backgrounds/569143.jpg"
-    };
-
     private static final int MAX_SWITCH_TIME = 40000;       // 40 seconds
     private static final int MIN_SWITCH_TIME = 20000;       // 20 seconds
 
+    private JSONArray backgrounds;
     private Handler handler;
     private ImageView background;
 
