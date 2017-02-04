@@ -1,6 +1,5 @@
 /*
- * Copyright (C) 2017 Jake
- *  Klinker
+ * Copyright (C) 2017 Jake Klinker
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,6 +34,7 @@ public class NetworkUtils {
 
     /**
      * Get a JSON string from the given url
+     *
      * @param url the url where the JSON is located
      * @return the String in the format of a JSON
      */

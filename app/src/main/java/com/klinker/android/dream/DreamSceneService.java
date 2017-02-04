@@ -1,6 +1,5 @@
 /*
- * Copyright (C) 2017 Jake
- *  Klinker
+ * Copyright (C) 2017 Jake Klinker
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -125,6 +124,7 @@ public class DreamSceneService extends DreamService {
 
     /**
      * Choose a random background URL from the list
+     *
      * @return a URL for a background
      * @throws JSONException when the url is out of bounds on the JSON, shouldn't happen.
      */
@@ -141,6 +141,7 @@ public class DreamSceneService extends DreamService {
 
     /**
      * Choose a random time to switch, somewhere in the range [MIN_SWITCH_TIME, MAX_SWITCH_TIME)
+     *
      * @return a random time in milliseconds
      */
     private int getRandomSwitchTime() {
