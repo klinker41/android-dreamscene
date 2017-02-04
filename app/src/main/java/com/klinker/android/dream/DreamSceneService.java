@@ -21,7 +21,7 @@ import android.service.dreams.DreamService;
 import android.util.Log;
 import android.widget.ImageView;
 
-import com.klinker.android.dream.loader.NetworkImageLoader;
+import com.bumptech.glide.Glide;
 import com.klinker.android.dream.util.NetworkUtils;
 
 import org.json.JSONArray;
@@ -109,7 +109,7 @@ public class DreamSceneService extends DreamService {
      */
     private void switchBackground() {
         try {
-            new NetworkImageLoader(this, getRandomBackgroundUrl(), background).run();
+            Glide.with(this).load(getRandomBackgroundUrl()).into(background);
         } catch (JSONException e) {
             Log.e(TAG, "Error switching backgrounds", e);
         }

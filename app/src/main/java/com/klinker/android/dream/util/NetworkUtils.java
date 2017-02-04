@@ -16,19 +16,13 @@
 
 package com.klinker.android.dream.util;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.util.Log;
-
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.URL;
 
 /**
@@ -37,30 +31,6 @@ import java.net.URL;
 public class NetworkUtils {
 
     private static final String TAG = "NetworkUtils";
-
-    /**
-     * Load a bitmap from the given location url
-     * @param location the url of the bitmap
-     * @return the bitmap from the url
-     * @throws Throwable
-     */
-    public static Bitmap loadBitmap(String location) throws Throwable {
-        if (location.equals("")) {
-            return null;
-        } else if (!(location.startsWith("http:") || location.startsWith("https:") || location.startsWith("www."))) {
-            location = "http:" + location;
-        }
-
-        location = location.replace(" ", "%20");
-        URL url = new URL(location);
-
-        // use a recycled bitmap
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inPreferQualityOverSpeed = true;
-        options.inBitmap = BitmapHelper.getCurrentBitmap();
-
-        return BitmapFactory.decodeStream(url.openConnection().getInputStream(), null, options);
-    }
 
     /**
      * Get a JSON string from the given url
@@ -72,9 +42,16 @@ public class NetworkUtils {
         String result = "";
 
         try {
-            HttpClient httpclient = new DefaultHttpClient();
-            HttpResponse httpResponse = httpclient.execute(new HttpGet(url));
-            inputStream = httpResponse.getEntity().getContent();
+            URL u = new URL(url);
+            HttpURLConnection c = (HttpURLConnection) u.openConnection();
+            c.setRequestMethod("GET");
+            c.setRequestProperty("Content-length", "0");
+            c.setUseCaches(false);
+            c.setAllowUserInteraction(false);
+            c.setConnectTimeout(10000);
+            c.setReadTimeout(10000);
+            c.connect();
+            inputStream = c.getInputStream();
             if (inputStream != null) {
                 result = convertInputStreamToString(inputStream);
             } else {
