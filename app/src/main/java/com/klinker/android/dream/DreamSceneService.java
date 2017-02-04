@@ -1,5 +1,6 @@
 /*
- * Copyright (C) 2015 Jacob Klinker
+ * Copyright (C) 2017 Jake
+ *  Klinker
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +23,6 @@ import android.util.Log;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
-import com.klinker.android.dream.util.NetworkUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;

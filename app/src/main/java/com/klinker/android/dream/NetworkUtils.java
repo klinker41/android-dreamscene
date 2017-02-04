@@ -1,5 +1,6 @@
 /*
- * Copyright (C) 2015 Jacob Klinker
+ * Copyright (C) 2017 Jake
+ *  Klinker
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +15,7 @@
  * limitations under the License.
  */
 
-package com.klinker.android.dream.util;
+package com.klinker.android.dream;
 
 import android.util.Log;
 
